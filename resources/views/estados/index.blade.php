@@ -6,18 +6,27 @@
         <h3 class="mb-1">Estados</h3>
         <div class="text-muted small">
             <i class="bi bi-info-circle mr-1"></i>
-            Datos del entorno de pruebas de COPOMEX.
+            Elige el tipo de datos al sincronizar: <strong>Pruebas (random)</strong> o <strong>Reales</strong>.
         </div>
     </div>
 
     <form id="sync-form" method="POST" action="{{ route('estados.sync') }}" class="text-right">
         @csrf
-        <button id="sync-btn" class="btn btn-success">
-            <i class="bi bi-arrow-repeat mr-1"></i>
-            Sincronizar con COPOMEX
-        </button>
+
+        <input type="hidden" name="mode" id="mode-input" value="test">
+
+        <div class="btn-group" role="group" aria-label="Sincronización COPOMEX">
+            <button type="button" class="btn btn-secondary" id="sync-test">
+                Sincronizar (Pruebas)
+            </button>
+
+            <button type="button" class="btn btn-success" id="sync-real">
+                Sincronizar (Reales)
+            </button>
+        </div>
+
         @if($ultimaSync)
-            <div class="text-muted small mb-2">
+            <div class="text-muted small mt-2 mb-0">
                 <i class="bi bi-clock-history mr-1"></i>
                 Última sincronización:
                 <strong>{{ $ultimaSync->diffForHumans() }}</strong>
@@ -62,14 +71,20 @@
     pageLength: 10,
     order: [[0, 'asc']],
     language: {
-      search: "Buscar:", lengthMenu: "Mostrar _MENU_", info: "Mostrando _START_ a _END_ de _TOTAL_", paginate: { previous: "Anterior", next: "Siguiente" }, zeroRecords: "Sin resultados",
+      search: "Buscar:",
+      lengthMenu: "Mostrar _MENU_",
+      info: "Mostrando _START_ a _END_ de _TOTAL_",
+      paginate: { previous: "Anterior", next: "Siguiente" },
+      zeroRecords: "Sin resultados",
     }
   });
 
   $('#sync-form').on('submit', function () {
-    const btn = $('#sync-btn');
-    btn.prop('disabled', true);
-    btn.html('<span class="spinner-border spinner-border-sm mr-2"></span>Sincronizando...');
+    const btn = $(document.activeElement);
+    if (btn.is('button[type="submit"]')) {
+      btn.prop('disabled', true);
+      btn.html('<span class="spinner-border spinner-border-sm mr-2"></span>Sincronizando...');
+    }
   });
 
   $(function () {
@@ -77,6 +92,20 @@
     if ($alerts.length) {
       setTimeout(() => $alerts.fadeOut(250, function(){ $(this).remove(); }), 2500);
     }
+  });
+
+  $('#sync-test').on('click', function () {
+    $('#mode-input').val('test');
+    $(this).prop('disabled', true).html('<span class="spinner-border spinner-border-sm mr-2"></span>Sincronizando...');
+    $('#sync-real').prop('disabled', true);
+    $('#sync-form').submit();
+  });
+
+  $('#sync-real').on('click', function () {
+    $('#mode-input').val('real');
+    $(this).prop('disabled', true).html('<span class="spinner-border spinner-border-sm mr-2"></span>Sincronizando...');
+    $('#sync-test').prop('disabled', true);
+    $('#sync-form').submit();
   });
 </script>
 @endsection

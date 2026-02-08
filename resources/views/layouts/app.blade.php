@@ -82,12 +82,26 @@
     @if(session('success'))
         <div class="alert alert-success shadow-sm border-0">
             <i class="bi bi-check-circle-fill mr-1"></i> {{ session('success') }}
+
+            @if(session('mode_used') === 'real' && session('credits_left') !== null)
+                <div class="small mt-1">
+                    <i class="bi bi-lightning-charge mr-1"></i>
+                    Créditos restantes: <strong>{{ session('credits_left') }}</strong>
+                </div>
+            @endif
         </div>
     @endif
 
     @if(session('error'))
         <div class="alert alert-danger shadow-sm border-0">
             <i class="bi bi-x-circle-fill mr-1"></i> {{ session('error') }}
+
+            @if(session('mode_used') === 'real' && session('credits_left') !== null)
+                <div class="small mt-1">
+                    <i class="bi bi-lightning-charge mr-1"></i>
+                    Créditos restantes (token real): <strong>{{ session('credits_left') }}</strong>
+                </div>
+            @endif
         </div>
     @endif
 
