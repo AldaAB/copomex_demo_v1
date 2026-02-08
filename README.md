@@ -19,7 +19,8 @@ Prueba técnica desarrollada con Laravel para el consumo del servicio COPOMEX.
 1. Clonar repositorio
 2. Configurar `.env`
 3. Ejecutar migraciones
-4. Ejecutar `php artisan serve`
+4. ejecutar `php artisan db:seed --class=CopomexSettingSeeder`
+5. Ejecutar `php artisan serve`
 
 ## Notas
 - El token de pruebas de COPOMEX devuelve datos simulados.
